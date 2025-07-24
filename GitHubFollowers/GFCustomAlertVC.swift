@@ -28,6 +28,10 @@ class GFCustomAlertVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.75)
+        configureTitleLabel()
+        configureBodyLabel()
+        configureActionButton()
+        configureContainerView()
     }
     
     required init?(coder: NSCoder) {
@@ -40,25 +44,27 @@ class GFCustomAlertVC: UIViewController {
 private extension GFCustomAlertVC {
     
     func configureContainerView() {
-        containerView.axis = .horizontal
-        containerView.spacing = 10
-        containerView.addArrangedSubview(titleLabel)
-        containerView.addArrangedSubview(bodyLabel)
-        containerView.addArrangedSubview(actionButton)
-        
         containerView.layer.cornerRadius = 16
         containerView.layer.borderWidth = 2
         containerView.layer.borderColor = UIColor.white.cgColor
         containerView.translatesAutoresizingMaskIntoConstraints = false
         containerView.backgroundColor = .systemBackground
         
+        containerView.axis = .horizontal
+        containerView.spacing = 10
+        containerView.axis = .vertical
+        containerView.alignment = .fill
+        containerView.distribution = .fillProportionally
+        
         view.addSubview(containerView)
+        
+        containerView.addArrangedSubview(titleLabel)
+        containerView.addArrangedSubview(bodyLabel)
+        containerView.addArrangedSubview(actionButton)
         
         NSLayoutConstraint.activate([
             containerView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            containerView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            containerView.heightAnchor.constraint(equalToConstant: 400),
-            containerView.widthAnchor.constraint(equalToConstant: 400)
+            containerView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
     }
     
