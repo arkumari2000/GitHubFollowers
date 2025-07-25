@@ -55,15 +55,18 @@ private extension GFCustomAlertVC {
         containerView.axis = .vertical
         containerView.alignment = .fill
         containerView.distribution = .fillProportionally
-        
-        view.addSubview(containerView)
+        containerView.layoutMargins = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
+        containerView.isLayoutMarginsRelativeArrangement = true
         
         containerView.addArrangedSubview(titleLabel)
         containerView.addArrangedSubview(bodyLabel)
         containerView.addArrangedSubview(actionButton)
         
+        view.addSubview(containerView)
+
         NSLayoutConstraint.activate([
-            containerView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            containerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             containerView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
     }
