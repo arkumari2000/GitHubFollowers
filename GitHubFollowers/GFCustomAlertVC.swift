@@ -51,7 +51,7 @@ private extension GFCustomAlertVC {
         containerView.backgroundColor = .systemBackground
         
         containerView.axis = .horizontal
-        containerView.spacing = 10
+        containerView.spacing = 20
         containerView.axis = .vertical
         containerView.alignment = .fill
         containerView.distribution = .fillProportionally
