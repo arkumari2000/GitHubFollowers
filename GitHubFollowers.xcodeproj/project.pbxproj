@@ -33,7 +33,7 @@
 		4BC39ACF2E2E8D0D0024B91B /* Exceptions for "GitHubFollowers" folder in "GitHubFollowers" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Info.plist,
+				Support/Info.plist,
 			);
 			target = 4BC39AA62E2E8D0B0024B91B /* GitHubFollowers */;
 		};
