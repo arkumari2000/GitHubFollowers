@@ -9,7 +9,9 @@ import UIKit
 
 class FollowerCell: UICollectionViewCell {
     
-    let defaultImage = UIImage(named: "avatar-placeholder")
+    static let reuseId = "FollowerCell"
+    let avatarImage = GFAvatarImageView(frame: .zero)
+    let userNameLabel = GFTitleLabel(textAlignment: .center, fontSize: 14)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -20,10 +22,26 @@ class FollowerCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure() {
-        layer.cornerRadius = 10
-        clipsToBounds = true
-        translatesAutoresizingMaskIntoConstraints = false
+    func set(follower: Follower) {
+        userNameLabel.text = follower.login
     }
     
+    func configure() {
+        addSubview(avatarImage)
+        addSubview(userNameLabel)
+        
+        let padding: CGFloat = 8
+        
+        NSLayoutConstraint.activate([
+            avatarImage.topAnchor.constraint(equalTo: contentView.topAnchor, constant: padding),
+            avatarImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding),
+            avatarImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding),
+            avatarImage.heightAnchor.constraint(equalTo: avatarImage.widthAnchor),
+            
+            userNameLabel.topAnchor.constraint(equalTo: avatarImage.bottomAnchor, constant: 12),
+            userNameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding),
+            userNameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding),
+            userNameLabel.heightAnchor.constraint(equalToConstant: 20)
+        ])
+    }
 }
