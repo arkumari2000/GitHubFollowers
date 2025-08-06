@@ -11,7 +11,7 @@ class FollowerCell: UICollectionViewCell {
     
     static let reuseId = "FollowerCell"
     let avatarImage = GFAvatarImageView(frame: .zero)
-    let userNameLabel = GFTitleLabel(textAlignment: .center, fontSize: 14)
+    let userNameLabel = GFTitleLabel(textAlignment: .center, fontSize: 16)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -24,6 +24,7 @@ class FollowerCell: UICollectionViewCell {
     
     func set(follower: Follower) {
         userNameLabel.text = follower.login
+        avatarImage.downloadImage(from: follower.avatarUrl)
     }
     
     func configure() {
@@ -33,14 +34,14 @@ class FollowerCell: UICollectionViewCell {
         let padding: CGFloat = 8
         
         NSLayoutConstraint.activate([
-            avatarImage.topAnchor.constraint(equalTo: contentView.topAnchor, constant: padding),
-            avatarImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding),
-            avatarImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding),
+            avatarImage.topAnchor.constraint(equalTo: topAnchor, constant: padding),
+            avatarImage.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding),
+            avatarImage.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding),
             avatarImage.heightAnchor.constraint(equalTo: avatarImage.widthAnchor),
             
             userNameLabel.topAnchor.constraint(equalTo: avatarImage.bottomAnchor, constant: 12),
-            userNameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding),
-            userNameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding),
+            userNameLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding),
+            userNameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding),
             userNameLabel.heightAnchor.constraint(equalToConstant: 20)
         ])
     }
