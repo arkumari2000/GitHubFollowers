@@ -13,6 +13,9 @@ class FollowersVC: UIViewController {
         case main
     }
     
+    var page = 1
+    var hasMoreFollowers = true
+    
     var userName: String!
     var followers: [Follower] = []
     var collectionView: UICollectionView!
@@ -22,7 +25,7 @@ class FollowersVC: UIViewController {
         super.viewDidLoad()
         conifgureViewController()
         configureCollectionView()
-        getFollowers()
+        getFollowers(userName: userName, page: page)
         configureDataSource()
     }
     
@@ -36,16 +39,19 @@ class FollowersVC: UIViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
     }
     
-    func getFollowers() {
-        NetworkManager.shared.getFollowers(for: userName, page: 1) { [weak self] result in
+    func getFollowers(userName: String, page: Int) {
+        NetworkManager.shared.getFollowers(for: userName, page: page) { [weak self] result in
+            
+            guard let self = self else { return }
             
             switch result {
             case .success(let followers):
-                self?.followers = followers
-                self?.updateData()
+                if followers.count < 100 { hasMoreFollowers = false }
+                self.followers.append(contentsOf: followers)
+                self.updateData()
                 
             case .failure(let error):
-                self?.presentGFAlertOnMainThread(title: "Bad Stuff Happend", message: error.rawValue, buttonTitle: "Ok")
+                self.presentGFAlertOnMainThread(title: "Bad Stuff Happend", message: error.rawValue, buttonTitle: "Ok")
                 return
             }
             
@@ -55,6 +61,7 @@ class FollowersVC: UIViewController {
     func configureCollectionView() {
         collectionView = UICollectionView(frame: view.frame, collectionViewLayout: UIHelper.createThreeColumnLayoutFlowLayout(in: view))
         view.addSubview(collectionView)
+        collectionView.delegate = self
         collectionView.backgroundColor = .systemBackground
         collectionView.register(FollowerCell.self, forCellWithReuseIdentifier: FollowerCell.reuseId)
     }
@@ -77,4 +84,19 @@ class FollowersVC: UIViewController {
         }
     }
 
+}
+
+extension FollowersVC: UICollectionViewDelegate {
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        let offsetY = collectionView.contentOffset.y
+        let contentHeight = collectionView.contentSize.height
+        let hegiht = collectionView.frame.size.height
+        
+        if offsetY > contentHeight - hegiht {
+            guard hasMoreFollowers else { return }
+            page += 1
+            getFollowers(userName: userName, page: page)
+        }
+    }
 }
