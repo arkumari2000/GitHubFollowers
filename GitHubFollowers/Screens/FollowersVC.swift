@@ -24,6 +24,7 @@ class FollowersVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         conifgureViewController()
+        configureSearchController()
         configureCollectionView()
         getFollowers(userName: userName, page: page)
         configureDataSource()
@@ -39,6 +40,13 @@ class FollowersVC: UIViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
     }
     
+    func configureSearchController() {
+        let searchController = UISearchController()
+        searchController.searchResultsUpdater = self
+        searchController.searchBar.placeholder = "Search for a username"
+        navigationItem.searchController = searchController
+    }
+    
     func getFollowers(userName: String, page: Int) {
         showLoadingView()
         NetworkManager.shared.getFollowers(for: userName, page: page) { [weak self] result in
@@ -48,16 +56,16 @@ class FollowersVC: UIViewController {
             
             switch result {
             case .success(let followers):
-                if followers.count < 100 { hasMoreFollowers = false }
+                if followers.count < 100 { self.hasMoreFollowers = false }
                 self.followers.append(contentsOf: followers)
                 
                 if self.followers.isEmpty {
-                    DispatchQueue.main.async {
-                        self.showEmptyStateView(with: "This user has no follower yet. Go Follow them 😉..", in: self.view)
-                    }
+                    let message = "This user has no follower yet. Go Follow them 😉.."
+                    DispatchQueue.main.async { self.showEmptyStateView(with: message, in: self.view) }
+                    return
                 }
                 
-                self.updateData()
+                self.updateData(on: self.followers)
                 
             case .failure(let error):
                 self.presentGFAlertOnMainThread(title: "Bad Stuff Happend", message: error.rawValue, buttonTitle: "Ok")
@@ -84,7 +92,7 @@ class FollowersVC: UIViewController {
         })
     }
     
-    func updateData() {
+    func updateData(on followers: [Follower]) {
         var Snapshot = NSDiffableDataSourceSnapshot<Section, Follower>()
         Snapshot.appendSections([.main])
         Snapshot.appendItems(followers)
@@ -107,5 +115,14 @@ extension FollowersVC: UICollectionViewDelegate {
             page += 1
             getFollowers(userName: userName, page: page)
         }
+    }
+}
+
+extension FollowersVC: UISearchResultsUpdating {
+    
+    func updateSearchResults(for searchController: UISearchController) {
+        guard let filterText = searchController.searchBar.text, !filterText.isEmpty else { return }
+        let filteredFollowers = followers.filter { $0.login.lowercased().contains(filterText.lowercased()) }
+        updateData(on: filteredFollowers)
     }
 }
