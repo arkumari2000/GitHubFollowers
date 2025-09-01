@@ -45,6 +45,7 @@ class FollowersVC: UIViewController {
         searchController.searchResultsUpdater = self
         searchController.searchBar.placeholder = "Search for a username"
         navigationItem.searchController = searchController
+        searchController.searchBar.delegate = self
     }
     
     func getFollowers(userName: String, page: Int) {
@@ -118,11 +119,15 @@ extension FollowersVC: UICollectionViewDelegate {
     }
 }
 
-extension FollowersVC: UISearchResultsUpdating {
+extension FollowersVC: UISearchResultsUpdating, UISearchBarDelegate {
     
     func updateSearchResults(for searchController: UISearchController) {
         guard let filterText = searchController.searchBar.text, !filterText.isEmpty else { return }
         let filteredFollowers = followers.filter { $0.login.lowercased().contains(filterText.lowercased()) }
         updateData(on: filteredFollowers)
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        updateData(on: followers)
     }
 }
