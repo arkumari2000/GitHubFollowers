@@ -13,13 +13,17 @@ class UserInfoVC: UIViewController {
     var userInfo: User!
     
     let headerView = UIView()
+    let itemViewOne = UIView()
+    let itemViewTwo = UIView()
+    
+    var itemViews: [UIView] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         view.backgroundColor = .systemBackground
-        getUserDetail()
         configureDoneButton()
+        getUserDetail()
         layoutUI()
     }
     
@@ -51,14 +55,31 @@ class UserInfoVC: UIViewController {
     }
     
     func layoutUI() {
-        view.addSubview(headerView)
-        headerView.translatesAutoresizingMaskIntoConstraints = false
+        itemViews = [headerView, itemViewOne, itemViewTwo]
+        
+        for itemView in itemViews {
+            view.addSubview(itemView)
+            itemView.translatesAutoresizingMaskIntoConstraints = false
+        }
+        
+        let padding: CGFloat = 10
+        let itemViewHeight: CGFloat = 140
         
         NSLayoutConstraint.activate([
             headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            headerView.heightAnchor.constraint(equalToConstant: 140)
+            headerView.heightAnchor.constraint(equalToConstant: 180),
+            
+            itemViewOne.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: padding),
+            itemViewOne.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
+            itemViewOne.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
+            itemViewOne.heightAnchor.constraint(equalToConstant: itemViewHeight),
+            
+            itemViewTwo.topAnchor.constraint(equalTo: itemViewOne.bottomAnchor, constant: padding),
+            itemViewTwo.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
+            itemViewTwo.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
+            itemViewTwo.heightAnchor.constraint(equalToConstant: itemViewHeight)
         ])
     }
     
